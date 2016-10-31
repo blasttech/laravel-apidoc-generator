@@ -223,6 +223,9 @@ abstract class AbstractGenerator
         list($rule, $parameters) = $parsedRule;
 
         switch ($rule) {
+            case 'description':
+                $attributeData['description'][] = Description::parse($rule)->getDescription();
+                break;
             case 'required':
                 $attributeData['required'] = true;
                 break;
