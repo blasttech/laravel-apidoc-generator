@@ -3,7 +3,7 @@
 namespace Mhkb\ApiDoc\Commands;
 
 use Illuminate\Console\Command;
-use Mhkb\Documentarian\Documentarian;
+use Mpociot\Documentarian\Documentarian;
 
 class UpdateDocumentation extends Command
 {

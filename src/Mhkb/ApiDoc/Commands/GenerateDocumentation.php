@@ -9,8 +9,8 @@ use Mhkb\ApiDoc\Generators\AbstractGenerator;
 use Mhkb\ApiDoc\Generators\DingoGenerator;
 use Mhkb\ApiDoc\Generators\LaravelGenerator;
 use Mhkb\ApiDoc\Postman\CollectionWriter;
-use Mhkb\Documentarian\Documentarian;
-use Mhkb\Reflection\DocBlock;
+use Mpociot\Documentarian\Documentarian;
+use Mpociot\Reflection\DocBlock;
 use ReflectionClass;
 
 class GenerateDocumentation extends Command
