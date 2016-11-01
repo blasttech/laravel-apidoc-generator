@@ -16,9 +16,9 @@
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">src/Mpociot/</directory>
+            <directory suffix=".php">src/Mhkb/</directory>
             <exclude>
-                <file>src/Mpociot/ApiDoc/ApiDocGeneratorServiceProvider.php</file>
+                <file>src/Mhkb/ApiDoc/ApiDocGeneratorServiceProvider.php</file>
                 <file>src/resources/views/documentarian.blade.php</file>
             </exclude>
         </whitelist>
