@@ -34,12 +34,12 @@
     },
     "autoload": {
         "psr-0": {
-            "Mpociot\\ApiDoc": "src/"
+            "Mhkb\\ApiDoc": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Mpociot\\ApiDoc\\Tests\\": "tests/"
+            "Mhkb\\ApiDoc\\Tests\\": "tests/"
         }
     }
 }
