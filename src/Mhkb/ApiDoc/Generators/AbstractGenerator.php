@@ -1,15 +1,15 @@
 <?php
 
-namespace Mpociot\ApiDoc\Generators;
+namespace Mhkb\ApiDoc\Generators;
 
 use Faker\Factory;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Mpociot\ApiDoc\Parsers\RuleDescriptionParser as Description;
+use Mhkb\ApiDoc\Parsers\RuleDescriptionParser as Description;
 use ReflectionClass;
-use Mpociot\Reflection\DocBlock;
+use Mhkb\Reflection\DocBlock;
 
 abstract class AbstractGenerator
 {

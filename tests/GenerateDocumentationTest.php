@@ -1,21 +1,21 @@
 <?php
 
-namespace Mpociot\ApiDoc\Tests;
+namespace Mhkb\ApiDoc\Tests;
 
 use Dingo\Api\Provider\LaravelServiceProvider;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Routing\Route;
-use Mpociot\ApiDoc\ApiDocGeneratorServiceProvider;
-use Mpociot\ApiDoc\Generators\LaravelGenerator;
-use Mpociot\ApiDoc\Tests\Fixtures\DingoTestController;
+use Mhkb\ApiDoc\ApiDocGeneratorServiceProvider;
+use Mhkb\ApiDoc\Generators\LaravelGenerator;
+use Mhkb\ApiDoc\Tests\Fixtures\DingoTestController;
 use Orchestra\Testbench\TestCase;
-use Mpociot\ApiDoc\Tests\Fixtures\TestController;
+use Mhkb\ApiDoc\Tests\Fixtures\TestController;
 use Illuminate\Support\Facades\Route as RouteFacade;
 
 class GenerateDocumentationTest extends TestCase
 {
     /**
-     * @var \Mpociot\ApiDoc\AbstractGenerator
+     * @var \Mhkb\ApiDoc\AbstractGenerator
      */
     protected $generator;
 

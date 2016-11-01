@@ -1,9 +1,9 @@
 <?php
 
-namespace Mpociot\ApiDoc\Commands;
+namespace Mhkb\ApiDoc\Commands;
 
 use Illuminate\Console\Command;
-use Mpociot\Documentarian\Documentarian;
+use Mhkb\Documentarian\Documentarian;
 
 class UpdateDocumentation extends Command
 {

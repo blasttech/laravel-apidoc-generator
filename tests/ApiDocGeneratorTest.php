@@ -1,19 +1,19 @@
 <?php
 
-namespace Mpociot\ApiDoc\Tests;
+namespace Mhkb\ApiDoc\Tests;
 
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Route as RouteFacade;
-use Mpociot\ApiDoc\ApiDocGeneratorServiceProvider;
-use Mpociot\ApiDoc\Generators\LaravelGenerator;
-use Mpociot\ApiDoc\Tests\Fixtures\TestController;
-use Mpociot\ApiDoc\Tests\Fixtures\TestRequest;
+use Mhkb\ApiDoc\ApiDocGeneratorServiceProvider;
+use Mhkb\ApiDoc\Generators\LaravelGenerator;
+use Mhkb\ApiDoc\Tests\Fixtures\TestController;
+use Mhkb\ApiDoc\Tests\Fixtures\TestRequest;
 use Orchestra\Testbench\TestCase;
 
 class ApiDocGeneratorTest extends TestCase
 {
     /**
-     * @var \Mpociot\ApiDoc\AbstractGenerator
+     * @var \Mhkb\ApiDoc\AbstractGenerator
      */
     protected $generator;
 

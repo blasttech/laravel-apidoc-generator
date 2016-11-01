@@ -1,6 +1,6 @@
 <?php
 
-namespace Mpociot\ApiDoc\Generators;
+namespace Mhkb\ApiDoc\Generators;
 
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\App;

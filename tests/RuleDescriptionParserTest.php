@@ -1,11 +1,11 @@
 <?php
 
-namespace Mpociot\ApiDoc\Tests;
+namespace Mhkb\ApiDoc\Tests;
 
 use Illuminate\Translation\LoaderInterface;
 use Illuminate\Translation\Translator;
-use Mpociot\ApiDoc\ApiDocGeneratorServiceProvider;
-use Mpociot\ApiDoc\Parsers\RuleDescriptionParser;
+use Mhkb\ApiDoc\ApiDocGeneratorServiceProvider;
+use Mhkb\ApiDoc\Parsers\RuleDescriptionParser;
 use Orchestra\Testbench\TestCase;
 use Mockery as m;
 

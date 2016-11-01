@@ -1,19 +1,19 @@
 <?php
 
-namespace Mpociot\ApiDoc\Tests;
+namespace Mhkb\ApiDoc\Tests;
 
 use Dingo\Api\Provider\LaravelServiceProvider;
-use Mpociot\ApiDoc\ApiDocGeneratorServiceProvider;
-use Mpociot\ApiDoc\Generators\DingoGenerator;
-use Mpociot\ApiDoc\Tests\Fixtures\DingoTestController;
-use Mpociot\ApiDoc\Tests\Fixtures\TestController;
-use Mpociot\ApiDoc\Tests\Fixtures\TestRequest;
+use Mhkb\ApiDoc\ApiDocGeneratorServiceProvider;
+use Mhkb\ApiDoc\Generators\DingoGenerator;
+use Mhkb\ApiDoc\Tests\Fixtures\DingoTestController;
+use Mhkb\ApiDoc\Tests\Fixtures\TestController;
+use Mhkb\ApiDoc\Tests\Fixtures\TestRequest;
 use Orchestra\Testbench\TestCase;
 
 class DingoGeneratorTest extends TestCase
 {
     /**
-     * @var \Mpociot\ApiDoc\Generators\DingoGenerator
+     * @var \Mhkb\ApiDoc\Generators\DingoGenerator
      */
     protected $generator;
 
