@@ -32,6 +32,7 @@ class GenerateDocumentation extends Command
                             {--force : Force rewriting of existing routes}
                             {--bindings= : Route Model Bindings}
                             {--methods= : Allowed methods}
+                            {--locale= : Faker locale }
                             {--header=* : Custom HTTP headers to add to the example requests. Separate the header name and value with ":"}
     ';
 
@@ -281,7 +282,7 @@ class GenerateDocumentation extends Command
             if (in_array($route->getName(), $allowedRoutes) || str_is($routePrefix, $route->getUri()) || in_array($middleware, $route->middleware())) {
                 $methods = $this->getMethods($route, $allowedMethods);
                 if ($this->isValidRoute($route) && $this->isRouteVisibleForDocumentation($route->getAction()['uses'])) {
-                    $parsedRoutes[] = $generator->processRoute($route, $bindings, $this->option('header'), $withResponse, $methods);
+                    $parsedRoutes[] = $generator->processRoute($route, $bindings, $this->option('header'), $withResponse, $methods, $this->option('locale'));
                     $this->info('Processed route: ['.implode(',', $methods) .'] '.$route->getUri());
                 } else {
                     $this->warn('Skipping route: ['.implode(',', $methods).'] '.$route->getUri());
@@ -310,7 +311,8 @@ class GenerateDocumentation extends Command
         foreach ($routes as $route) {
             if (empty($allowedRoutes) || in_array($route->getName(), $allowedRoutes) || str_is($routePrefix, $route->uri()) || in_array($middleware, $route->middleware())) {
                 if ($this->isValidRoute($route) && $this->isRouteVisibleForDocumentation($route->getAction()['uses'])) {
-                    $parsedRoutes[] = $generator->processRoute($route, $bindings, $this->option('header'), $withResponse);
+                    $methods = $this->getMethods($route, $allowedMethods);
+                    $parsedRoutes[] = $generator->processRoute($route, $bindings, $this->option('header'), $withResponse, $methods, $this->option('locale'));
                     $this->info('Processed route: ['.implode(',', $this->getMethods($route, $allowedMethods)).'] '.$route->uri());
                 } else {
                     $this->warn('Skipping route: ['.implode(',', $this->getMethods($route, $allowedMethods)).'] '.$route->uri());

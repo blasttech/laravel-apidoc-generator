@@ -24,10 +24,11 @@ class LaravelGenerator extends AbstractGenerator
      * @param array $headers
      * @param bool $withResponse
      * @param array $methods
+     * @param string $locale
      *
      * @return array
      */
-    public function processRoute($route, $bindings = [], $headers = [], $withResponse = true, $methods = [])
+    public function processRoute($route, $bindings = [], $headers = [], $withResponse = true, $methods = [], $locale = null)
     {
         $content = '';
 
@@ -54,7 +55,7 @@ class LaravelGenerator extends AbstractGenerator
             'uri' => $route->getUri(),
             'parameters' => [],
             'response' => $content,
-        ], $routeAction, $bindings);
+        ], $routeAction, $bindings, $locale);
     }
 
     /**

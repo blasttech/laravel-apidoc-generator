@@ -12,10 +12,11 @@ class DingoGenerator extends AbstractGenerator
      * @param array $headers
      * @param bool $withResponse
      * @param array $methods
-     *
+     * @param string $locale
+     * 
      * @return array
      */
-    public function processRoute($route, $bindings = [], $headers = [], $withResponse = true, $methods = [])
+    public function processRoute($route, $bindings = [], $headers = [], $withResponse = true, $methods = [], $locale = null)
     {
         $response = '';
 
@@ -39,7 +40,7 @@ class DingoGenerator extends AbstractGenerator
             'uri' => $route->uri(),
             'parameters' => [],
             'response' => $response,
-        ], $routeAction, $bindings);
+        ], $routeAction, $bindings, $locale);
     }
 
     /**

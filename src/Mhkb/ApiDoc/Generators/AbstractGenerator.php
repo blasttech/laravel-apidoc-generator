@@ -25,19 +25,21 @@ abstract class AbstractGenerator
      * @param array $bindings
      * @param bool $withResponse
      * @param array $methods 
+     * @param string $locale
      *
      * @return array
      */
-    abstract public function processRoute($route, $bindings = [], $withResponse = true, $methods = []);
+    abstract public function processRoute($route, $bindings = [], $withResponse = true, $methods = [], $locale = null);
 
     /**
      * @param array $routeData
      * @param array $routeAction
      * @param array $bindings
+     * @param string $locale
      *
      * @return mixed
      */
-    protected function getParameters($routeData, $routeAction, $bindings)
+    protected function getParameters($routeData, $routeAction, $bindings, $locale = null)
     {
         $validator = Validator::make([], $this->getRouteRules($routeAction['uses'], $bindings));
         foreach ($validator->getRules() as $attribute => $rules) {
@@ -49,7 +51,7 @@ abstract class AbstractGenerator
                 'description' => [],
             ];
             foreach ($rules as $ruleName => $rule) {
-                $this->parseRule($rule, $attribute, $attributeData, $routeData['id']);
+                $this->parseRule($rule, $attribute, $attributeData, $routeData['id'], $locale);
             }
             $routeData['parameters'][$attribute] = $attributeData;
         }
@@ -210,12 +212,13 @@ abstract class AbstractGenerator
      * @param  string  $ruleName
      * @param  array  $attributeData
      * @param  int  $seed
+     * @param string $locale
      *
      * @return void
      */
-    protected function parseRule($rule, $ruleName, &$attributeData, $seed)
+    protected function parseRule($rule, $ruleName, &$attributeData, $seed, $locale = null)
     {
-        $faker = Factory::create();
+        $faker = Factory::create($locale);
         $faker->seed(crc32($seed));
 
         $parsedRule = $this->parseStringRule($rule);
