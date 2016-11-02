@@ -108,7 +108,7 @@ As well as the standard rules above, descriptions are allowed, like below:
 public function rules()
 {
     return [
-        'title' => 'required|max:255|description:The book's title.',
+        'title' => 'required|max:255|description:The book\'s title.',
         'body' => 'required|description:Should be a full description of the book.',
         'type' => 'in:foo,bar',
         'thumbnail' => 'required_if:type,foo|image',
