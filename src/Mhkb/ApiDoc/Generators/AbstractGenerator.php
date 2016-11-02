@@ -223,9 +223,6 @@ abstract class AbstractGenerator
         list($rule, $parameters) = $parsedRule;
 
         switch ($rule) {
-            case 'description':
-                $attributeData['description'][] = implode(',', $parameters);
-                break;
             case 'required':
                 $attributeData['required'] = true;
                 break;
@@ -390,6 +387,12 @@ abstract class AbstractGenerator
             case 'ip':
                 $attributeData['value'] = $faker->ipv4;
                 $attributeData['type'] = $rule;
+                break;
+            case 'description':
+                $attributeData['description'][] = implode(',', $parameters);
+                break;
+            case 'faker':
+                $attributeData['value'] = $faker->{$parameters[0]};
                 break;
         }
 
