@@ -31,6 +31,7 @@ class GenerateDocumentation extends Command
                             {--router=laravel : The router to be used (Laravel or Dingo)}
                             {--force : Force rewriting of existing routes}
                             {--bindings= : Route Model Bindings}
+                            {--methods= : Allowed methods}
                             {--header=* : Custom HTTP headers to add to the example requests. Separate the header name and value with ":"}
     ';
 
@@ -67,6 +68,11 @@ class GenerateDocumentation extends Command
         $allowedRoutes = $this->option('routes');
         $routePrefix = $this->option('routePrefix');
         $middleware = $this->option('middleware');
+        if ($this->option('methods') === null) {
+            $allowedMethods = ['GET', 'POST', 'PUT', 'PATCH', 'HEAD'];
+        } else {
+            $allowedMethods = explode(',', $this->option('methods'));             
+        }
 
         $this->setUserToBeImpersonated($this->option('actAsUserId'));
 
@@ -77,9 +83,9 @@ class GenerateDocumentation extends Command
         }
 
         if ($this->option('router') === 'laravel') {
-            $parsedRoutes = $this->processLaravelRoutes($generator, $allowedRoutes, $routePrefix, $middleware);
+            $parsedRoutes = $this->processLaravelRoutes($generator, $allowedRoutes, $routePrefix, $middleware, $allowedMethods);
         } else {
-            $parsedRoutes = $this->processDingoRoutes($generator, $allowedRoutes, $routePrefix, $middleware);
+            $parsedRoutes = $this->processDingoRoutes($generator, $allowedRoutes, $routePrefix, $middleware, $allowedMethods);
         }
         $parsedRoutes = collect($parsedRoutes)->groupBy('resource')->sortBy('resource');
 
@@ -239,13 +245,33 @@ class GenerateDocumentation extends Command
     }
 
     /**
-     * @param AbstractGenerator  $generator
+     * @param $route
+     * @param array $allowedMethods
+     * @return mixed
+     */
+    public function getMethods($route, $allowedMethods = [])
+    {
+        $methods = $route->getMethods();
+
+        foreach ($methods as $method) {
+            if (!isset($allowedMethods[$method])) {
+                unset($methods[$method]);
+            }
+        }
+        
+        return $methods;
+    }
+
+    /**
+     * @param AbstractGenerator $generator
      * @param $allowedRoutes
      * @param $routePrefix
+     * @param $middleware
+     * @param $allowedMethods
      *
      * @return array
      */
-    private function processLaravelRoutes(AbstractGenerator $generator, $allowedRoutes, $routePrefix, $middleware)
+    private function processLaravelRoutes(AbstractGenerator $generator, $allowedRoutes, $routePrefix, $middleware, $allowedMethods)
     {
         $withResponse = $this->option('noResponseCalls') === false;
         $routes = $this->getRoutes();
@@ -253,11 +279,12 @@ class GenerateDocumentation extends Command
         $parsedRoutes = [];
         foreach ($routes as $route) {
             if (in_array($route->getName(), $allowedRoutes) || str_is($routePrefix, $route->getUri()) || in_array($middleware, $route->middleware())) {
+                $methods = $this->getMethods($route, $allowedMethods);
                 if ($this->isValidRoute($route) && $this->isRouteVisibleForDocumentation($route->getAction()['uses'])) {
-                    $parsedRoutes[] = $generator->processRoute($route, $bindings, $this->option('header'), $withResponse);
-                    $this->info('Processed route: ['.implode(',', $route->getMethods()).'] '.$route->getUri());
+                    $parsedRoutes[] = $generator->processRoute($route, $bindings, $this->option('header'), $withResponse, $methods);
+                    $this->info('Processed route: ['.implode(',', $methods) .'] '.$route->getUri());
                 } else {
-                    $this->warn('Skipping route: ['.implode(',', $route->getMethods()).'] '.$route->getUri());
+                    $this->warn('Skipping route: ['.implode(',', $methods).'] '.$route->getUri());
                 }
             }
         }
@@ -269,10 +296,12 @@ class GenerateDocumentation extends Command
      * @param AbstractGenerator $generator
      * @param $allowedRoutes
      * @param $routePrefix
+     * @param $middleware
+     * @param $allowedMethods
      *
      * @return array
      */
-    private function processDingoRoutes(AbstractGenerator $generator, $allowedRoutes, $routePrefix, $middleware)
+    private function processDingoRoutes(AbstractGenerator $generator, $allowedRoutes, $routePrefix, $middleware, $allowedMethods)
     {
         $withResponse = $this->option('noResponseCalls') === false;
         $routes = $this->getRoutes();
@@ -282,9 +311,9 @@ class GenerateDocumentation extends Command
             if (empty($allowedRoutes) || in_array($route->getName(), $allowedRoutes) || str_is($routePrefix, $route->uri()) || in_array($middleware, $route->middleware())) {
                 if ($this->isValidRoute($route) && $this->isRouteVisibleForDocumentation($route->getAction()['uses'])) {
                     $parsedRoutes[] = $generator->processRoute($route, $bindings, $this->option('header'), $withResponse);
-                    $this->info('Processed route: ['.implode(',', $route->getMethods()).'] '.$route->uri());
+                    $this->info('Processed route: ['.implode(',', $this->getMethods($route, $allowedMethods)).'] '.$route->uri());
                 } else {
-                    $this->warn('Skipping route: ['.implode(',', $route->getMethods()).'] '.$route->uri());
+                    $this->warn('Skipping route: ['.implode(',', $this->getMethods($route, $allowedMethods)).'] '.$route->uri());
                 }
             }
         }

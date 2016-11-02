@@ -102,6 +102,20 @@ public function rules()
 
 **Result:** ![Form Request](http://marcelpociot.com/documentarian/form_request.png)
 
+As well as the standard rules above, descriptions are allowed, like below:
+
+```php
+public function rules()
+{
+    return [
+        'title' => 'required|max:255|description:The book's title.',
+        'body' => 'required|description:Should be a full description of the book.',
+        'type' => 'in:foo,bar',
+        'thumbnail' => 'required_if:type,foo|image',
+    ];
+}
+```
+
 #### API responses
 
 If your API route accepts a `GET` method, this package tries to call the API route with all middleware disabled to fetch an example API response. 

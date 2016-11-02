@@ -24,10 +24,11 @@ abstract class AbstractGenerator
      * @param  \Illuminate\Routing\Route $route
      * @param array $bindings
      * @param bool $withResponse
+     * @param array $methods 
      *
      * @return array
      */
-    abstract public function processRoute($route, $bindings = [], $withResponse = true);
+    abstract public function processRoute($route, $bindings = [], $withResponse = true, $methods = []);
 
     /**
      * @param array $routeData
@@ -60,14 +61,13 @@ abstract class AbstractGenerator
      * @param  $route
      * @param  $bindings
      * @param  $headers
+     * @param  $methods
      *
      * @return \Illuminate\Http\Response
      */
-    protected function getRouteResponse($route, $bindings, $headers = [])
+    protected function getRouteResponse($route, $bindings, $headers = [], $methods = [])
     {
         $uri = $this->addRouteModelBindings($route, $bindings);
-
-        $methods = $route->getMethods();
 
         // Split headers into key - value pairs
         $headers = collect($headers)->map(function ($value) {
