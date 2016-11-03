@@ -56,12 +56,21 @@ console.log(response);
 
 @endforeach
 @if(count($parsedRoute['parameters']))
-#### Parameters
+### Parameters
 
 Parameter | Type | Status | Description
 --------- | ------- | ------- | ------- | -----------
 @foreach($parsedRoute['parameters'] as $attribute => $parameter)
     {{$attribute}} | {{$parameter['type']}} | @if($parameter['required']) required @else optional @endif | {!! implode(' ',$parameter['description']) !!}
+@endforeach
+@endif
+@if(in_array('GET',$parsedRoute['methods']) && count($parsedRoute['tags']) > 0 && count($parsedRoute['tags']['param']) > 0)
+
+### URL Parameters
+Parameter | Type | Description
+--------- | ------- | -----------
+@foreach($parsedRoute['tags']['param'] as $attribute => $tag)
+    {{ $tag['name'] }} | {{ $tag['type'] }} | {{ $tag['desc'] }}
 @endforeach
 @endif
 

@@ -13,10 +13,11 @@ class DingoGenerator extends AbstractGenerator
      * @param bool $withResponse
      * @param array $methods
      * @param string $locale
+     * @param boolean $includeTags
      * 
      * @return array
      */
-    public function processRoute($route, $bindings = [], $headers = [], $withResponse = true, $methods = [], $locale = null)
+    public function processRoute($route, $bindings = [], $headers = [], $withResponse = true, $methods = [], $locale = null, $includeTags = null)
     {
         $response = '';
 
@@ -31,11 +32,18 @@ class DingoGenerator extends AbstractGenerator
         $routeGroup = $this->getRouteGroup($routeAction['uses']);
         $routeDescription = $this->getRouteDescription($routeAction['uses']);
 
+        if ($includeTags) {
+            $tags = $routeDescription['tags'];
+        } else {
+            $tags = [];
+        }
+
         return $this->getParameters([
             'id' => md5($route->uri().':'.implode($methods)),
             'resource' => $routeGroup,
             'title' => $routeDescription['short'],
             'description' => $routeDescription['long'],
+            'tags' => $tags,
             'methods' => $methods,
             'uri' => $route->uri(),
             'parameters' => [],

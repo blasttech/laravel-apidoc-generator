@@ -25,10 +25,11 @@ class LaravelGenerator extends AbstractGenerator
      * @param bool $withResponse
      * @param array $methods
      * @param string $locale
+     * @param boolean $includeTags
      *
      * @return array
      */
-    public function processRoute($route, $bindings = [], $headers = [], $withResponse = true, $methods = [], $locale = null)
+    public function processRoute($route, $bindings = [], $headers = [], $withResponse = true, $methods = [], $locale = null, $includeTags = null)
     {
         $content = '';
 
@@ -45,12 +46,19 @@ class LaravelGenerator extends AbstractGenerator
                 $content = $response->getContent();
             }
         }
+        
+        if ($includeTags) {
+            $tags = $routeDescription['tags'];
+        } else {
+            $tags = [];
+        }
 
         return $this->getParameters([
             'id' => md5($route->getUri().':'.implode($methods)),
             'resource' => $routeGroup,
             'title' => $routeDescription['short'],
             'description' => $routeDescription['long'],
+            'tags' => $tags,
             'methods' => $methods,
             'uri' => $route->getUri(),
             'parameters' => [],

@@ -24,12 +24,13 @@ abstract class AbstractGenerator
      * @param  \Illuminate\Routing\Route $route
      * @param array $bindings
      * @param bool $withResponse
-     * @param array $methods 
+     * @param array $methods
      * @param string $locale
-     *
+     * @param boolean $includeTags
+     * 
      * @return array
      */
-    abstract public function processRoute($route, $bindings = [], $withResponse = true, $methods = [], $locale = null);
+    abstract public function processRoute($route, $bindings = [], $withResponse = true, $methods = [], $locale = null, $includeTags = null);
 
     /**
      * @param array $routeData
@@ -111,9 +112,45 @@ abstract class AbstractGenerator
         $comment = $reflectionMethod->getDocComment();
         $phpdoc = new DocBlock($comment);
 
+        $tags = [];
+        foreach ($phpdoc->getTags() as $tag) {
+            $tag_name = $tag->getName();
+
+            preg_match('/([\|\$\w]+)[\s]+([\|\$\w]+)[\s]+(.*)/', $tag->getContent(), $tag_desc);
+
+            if (count($tag_desc) > 0) {
+                $param_name = '';
+                $param_type = '';
+                $param_desc = '';
+                if ($tag_name == 'param' && count($tag_desc) > 1) {
+                    if (substr($tag_desc[1], 0, 1) === '$') {
+                        $param_name = substr($tag_desc[1], 1);
+                        $param_type = $tag_desc[2];
+                    } elseif (substr($tag_desc[2], 0, 1) === '$') {
+                        $param_name = substr($tag_desc[2], 1);
+                        $param_type = $tag_desc[1];
+                    } else {
+                        $param_name = $tag_desc[1];
+                        $param_type = $tag_desc[2];
+                    }
+                    if ($tag_desc[3]) {
+                        $param_desc = $tag_desc[3];
+                    }
+                }
+
+                $tags[$tag_name][] = [
+                    'content' => $tag_desc[0],
+                    'name' => $param_name,
+                    'type' => $param_type,
+                    'desc' => $param_desc,
+                ];
+            }
+//            var_dump($tags);
+        }
         return [
             'short' => $phpdoc->getShortDescription(),
             'long' => $phpdoc->getLongDescription()->getContents(),
+            'tags' => $tags,
         ];
     }
 

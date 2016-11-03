@@ -51,6 +51,9 @@ Option | Description
 `bindings` | List of route bindings that should be replaced when trying to retrieve route results. Syntax format: `binding_one,id|binding_two,id`
 `force` | Force the re-generation of existing/modified API routes
 `header` | Custom HTTP headers to add to the example requests. Separate the header name and value with ":". For example: `--header 'Authorization: CustomToken'`
+`locale` | The locale to use for Faker results. Default: `en_us`
+`methods` | The HTTP methods which are allowed to be displayed - defaults to all. For example, `--methods=GET,POST`
+`tags` | Include API URL tags descriptions from phpdocs
 
 ## Publish rule descriptions for customisation or translation.
 
