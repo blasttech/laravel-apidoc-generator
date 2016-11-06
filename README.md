@@ -25,6 +25,19 @@ Go to your `config/app.php` and add the service provider:
 ```php
 Mhkb\ApiDoc\ApiDocGeneratorServiceProvider::class,
 ```
+This package uses two extra validation rules in Laravel. If you wish to use these, you need to add the following to your AppServiceProvider.php
+
+```php
+public function boot()
+{
+    Validator::extend('description', function ($field, $value, $parameters) {
+        return true;
+    });
+    Validator::extend('faker', function ($field, $value, $parameters) {
+        return true;
+    });
+}
+```
 
 ## Usage
 
@@ -105,7 +118,7 @@ public function rules()
 
 **Result:** ![Form Request](http://marcelpociot.com/documentarian/form_request.png)
 
-As well as the standard rules above, descriptions are allowed, like below:
+As well as the standard rules above, descriptions can be extended in the Description column by adding a description rule, like below:
 
 ```php
 public function rules()
@@ -113,11 +126,24 @@ public function rules()
     return [
         'title' => 'required|max:255|description:The book\'s title.',
         'body' => 'required|description:Should be a full description of the book.',
-        'type' => 'in:foo,bar',
-        'thumbnail' => 'required_if:type,foo|image',
     ];
 }
 ```
+
+Also, you can set a rule to force a certain faker type to be used in the example requests which are generated. For example:
+
+```php
+public function rules()
+{
+    return [
+        'phone_number' => 'description:The user\'s phone number|faker:phoneNumber',
+        'password' => 'required|description:The user\'s password|faker:password',
+    ];
+}
+```
+
+> Note: If you use the description or faker rules, make sure you modify your AppServiceProvider.php as shown above.
+
 
 #### API responses
 
