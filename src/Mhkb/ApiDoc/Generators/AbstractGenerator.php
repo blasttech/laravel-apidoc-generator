@@ -432,9 +432,13 @@ abstract class AbstractGenerator
                 $attributeData['description'][] = implode(',', $parameters);
                 break;
             case 'faker':
-                $attributeData['value'] = $faker->{$parameters[0]};
-                break;
-        }
+                if (count($parameters) > 1) {
+                    $fakerFunc = array_shift($parameters);
+                    $attributeData['value'] = $faker->{$fakerFunc}($parameters);
+                } else {
+                    $attributeData['value'] = $faker->{$parameters[0]};
+                }
+                break;        }
 
         if ($attributeData['value'] === '') {
             $attributeData['value'] = $faker->word;
