@@ -70,7 +70,7 @@ abstract class AbstractGenerator
      */
     protected function getRouteResponse($route, $bindings, $headers = [], $methods = [])
     {
-        $uri = $this->addRouteModelBindings($route, $bindings);
+        $uri = $this->addRouteModelBindings($route, $bindings, $methods);
 
         // Split headers into key - value pairs
         $headers = collect($headers)->map(function ($value) {
@@ -85,14 +85,19 @@ abstract class AbstractGenerator
     /**
      * @param $route
      * @param array $bindings
+     * @param $methods
      *
      * @return mixed
      */
-    protected function addRouteModelBindings($route, $bindings)
+    protected function addRouteModelBindings($route, $bindings, $methods = [])
     {
         $uri = $this->getUri($route);
-        foreach ($bindings as $model => $id) {
-            $uri = str_replace('{'.$model.'}', $id, $uri);
+        if ($methods[0] != 'POST') {
+            foreach ($bindings as $model => $id) {
+                $uri = str_replace('{'.$model.'}', $id, $uri);
+            }
+        } else {
+            $uri .= '?' . http_build_query($bindings);
         }
 
         return $uri;
@@ -438,7 +443,8 @@ abstract class AbstractGenerator
                 } else {
                     $attributeData['value'] = $faker->{$parameters[0]};
                 }
-                break;        }
+                break;        
+        }
 
         if ($attributeData['value'] === '') {
             $attributeData['value'] = $faker->word;
