@@ -3,12 +3,12 @@
 namespace Mhkb\ApiDoc\Tests;
 
 use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\Route as RouteFacade;
-use Mhkb\ApiDoc\ApiDocGeneratorServiceProvider;
+use Orchestra\Testbench\TestCase;
+use Mhkb\ApiDoc\Tests\Fixtures\TestRequest;
 use Mhkb\ApiDoc\Generators\LaravelGenerator;
 use Mhkb\ApiDoc\Tests\Fixtures\TestController;
-use Mhkb\ApiDoc\Tests\Fixtures\TestRequest;
-use Orchestra\Testbench\TestCase;
+use Mhkb\ApiDoc\ApiDocGeneratorServiceProvider;
+use Illuminate\Support\Facades\Route as RouteFacade;
 
 class ApiDocGeneratorTest extends TestCase
 {

@@ -2,16 +2,16 @@
 
 namespace Mhkb\ApiDoc\Commands;
 
+use ReflectionClass;
 use Illuminate\Console\Command;
+use Mpociot\Reflection\DocBlock;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
-use Mhkb\ApiDoc\Generators\AbstractGenerator;
+use Mpociot\Documentarian\Documentarian;
+use Mhkb\ApiDoc\Postman\CollectionWriter;
 use Mhkb\ApiDoc\Generators\DingoGenerator;
 use Mhkb\ApiDoc\Generators\LaravelGenerator;
-use Mhkb\ApiDoc\Postman\CollectionWriter;
-use Mpociot\Documentarian\Documentarian;
-use Mpociot\Reflection\DocBlock;
-use ReflectionClass;
+use Mhkb\ApiDoc\Generators\AbstractGenerator;
 
 class GenerateDocumentation extends Command
 {
@@ -27,6 +27,7 @@ class GenerateDocumentation extends Command
                             {--middleware= : The middleware to use for generation}
                             {--noResponseCalls : Disable API response calls}
                             {--noPostmanCollection : Disable Postman collection creation}
+                            {--useMiddlewares : Use all configured route middlewares}
                             {--actAsUserId= : The user ID to use for API response calls}
                             {--router=laravel : The router to be used (Laravel or Dingo)}
                             {--force : Force rewriting of existing routes}
@@ -85,12 +86,16 @@ class GenerateDocumentation extends Command
             return false;
         }
 
+        $generator->prepareMiddleware($this->option('useMiddlewares'));
+
         if ($this->option('router') === 'laravel') {
             $parsedRoutes = $this->processLaravelRoutes($generator, $allowedRoutes, $routePrefix, $middleware, $allowedMethods, $includeTags);
         } else {
             $parsedRoutes = $this->processDingoRoutes($generator, $allowedRoutes, $routePrefix, $middleware, $allowedMethods, $includeTags);
         }
-        $parsedRoutes = collect($parsedRoutes)->groupBy('resource')->sortBy('resource');
+        $parsedRoutes = collect($parsedRoutes)->groupBy('resource')->sort(function ($a, $b) {
+            return strcmp($a->first()['resource'], $b->first()['resource']);
+        });
 
         $this->writeMarkdown($parsedRoutes);
     }
@@ -112,7 +117,7 @@ class GenerateDocumentation extends Command
 
         $parsedRouteOutput = $parsedRoutes->map(function ($routeGroup) {
             return $routeGroup->map(function ($route) {
-                $route['output'] = (string) view('apidoc::partials.route')->with('parsedRoute', $route);
+                $route['output'] = (string) view('apidoc::partials.route')->with('parsedRoute', $route)->render();
 
                 return $route;
             });
@@ -189,7 +194,6 @@ class GenerateDocumentation extends Command
         $documentarian->generate($outputPath);
 
         $this->info('Wrote HTML documentation to: '.$outputPath.'/public/index.html');
-
 
         if ($this->option('noPostmanCollection') !== true) {
             $this->info('Generating Postman collection');
@@ -282,13 +286,13 @@ class GenerateDocumentation extends Command
         $bindings = $this->getBindings();
         $parsedRoutes = [];
         foreach ($routes as $route) {
-            if (in_array($route->getName(), $allowedRoutes) || str_is($routePrefix, $route->getUri()) || in_array($middleware, $route->middleware())) {
+            if (in_array($route->getName(), $allowedRoutes) || str_is($routePrefix, $generator->getUri($route)) || in_array($middleware, $route->middleware())) {
                 $methods = $this->getMethods($route, $allowedMethods);
                 if ($this->isValidRoute($route) && $this->isRouteVisibleForDocumentation($route->getAction()['uses'])) {
                     $parsedRoutes[] = $generator->processRoute($route, $bindings, $this->option('header'), $withResponse, $methods, $this->option('locale'), $includeTags);
-                    $this->info('Processed route: ['.implode(',', $methods) .'] '.$route->getUri());
+                    $this->info('Processed route: ['.implode(',', $methods) .'] '.$generator->getUri($route));
                 } else {
-                    $this->warn('Skipping route: ['.implode(',', $methods).'] '.$route->getUri());
+                    $this->warn('Skipping route: ['.implode(',', $methods).'] '.$generator->getUri($route));
                 }
             }
         }

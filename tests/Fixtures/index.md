@@ -30,7 +30,7 @@ It can also be multiple lines long.
 > Example request:
 
 ```bash
-curl "http://localhost/api/test" \
+curl -X GET "http://localhost/api/test" \
 -H "Accept: application/json"
 ```
 
@@ -40,13 +40,13 @@ var settings = {
     "crossDomain": true,
     "url": "http://localhost/api/test",
     "method": "GET",
-        "headers": {
-    "accept": "application/json"
+    "headers": {
+        "accept": "application/json"
     }
 }
 
 $.ajax(settings).done(function (response) {
-console.log(response);
+    console.log(response);
 });
 ```
 
@@ -63,13 +63,14 @@ null
 
 
 <!-- END_08307893aff90cc5097c48a1c8fc2f6d -->
+
 <!-- START_8ba174f2507a0967efd46fab3764b80e -->
 ## api/fetch
 
 > Example request:
 
 ```bash
-curl "http://localhost/api/fetch" \
+curl -X GET "http://localhost/api/fetch" \
 -H "Accept: application/json"
 ```
 
@@ -79,13 +80,13 @@ var settings = {
     "crossDomain": true,
     "url": "http://localhost/api/fetch",
     "method": "GET",
-        "headers": {
-    "accept": "application/json"
+    "headers": {
+        "accept": "application/json"
     }
 }
 
 $.ajax(settings).done(function (response) {
-console.log(response);
+    console.log(response);
 });
 ```
 
@@ -108,3 +109,4 @@ console.log(response);
 
 
 <!-- END_8ba174f2507a0967efd46fab3764b80e -->
+

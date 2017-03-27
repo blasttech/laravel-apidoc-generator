@@ -39,6 +39,8 @@ public function boot()
 }
 ```
 
+> Using Laravel < 5.4? Use version 1.0! For Laravel 5.4 and up, use 2.0 instead.
+
 ## Usage
 
 To generate your API documentation, use the `api:generate` artisan command.
@@ -47,7 +49,17 @@ To generate your API documentation, use the `api:generate` artisan command.
 $ php artisan api:generate --routePrefix="api/v1/*"
 ```
 
-This command will scan your applications routes for the URIs matching `api/v1/*` and will parse these controller methods and form requests.
+This command will scan your applications routes for the URIs matching `api/v1/*` and will parse these controller methods and form requests. For example:
+
+```php
+// API Group Routes
+Route::group(array('prefix' => 'api/v1', 'middleware' => []), function () {
+	// Custom route added to standard Resource
+	Route::get('example/foo', 'ExampleController@foo');
+	// Standard Resource route
+	Route::resource('example', 'ExampleController'));
+});
+```
 
 ### Available command options:
 
@@ -59,6 +71,7 @@ Option | Description
 `middleware` | The middlewares to use for generation
 `noResponseCalls` | Disable API response calls
 `noPostmanCollection` | Disable Postman collection creation
+`useMiddlewares` | Use all configured route middlewares (Needed for Laravel 5.3 `SubstituteBindings` middleware)
 `actAsUserId` | The user ID to use for authenticated API response calls
 `router` | The router to use, when processing the route files (can be Laravel or Dingo - defaults to Laravel)
 `bindings` | List of route bindings that should be replaced when trying to retrieve route results. Syntax format: `binding_one,id|binding_two,id`
@@ -87,17 +100,32 @@ This package uses these resources to generate the API documentation:
 
 This package uses the HTTP controller doc blocks to create a table of contents and show descriptions for your API methods.
 
+Using `@resource` in a doc block prior to each controller is useful as it creates a Group within the API documentation for all methods defined in that controller (rather than listing every method in a single list for all your controllers), but using `@resource` is not required. The short description after the `@resource` should be unique to allow anchor tags to navigate to this section. A longer description can be included below.
+
+Above each method within the controller you wish to include in your API documentation you should have a doc block. This should include a unique short description as the first entry. An optional second entry can be added with further information. Both descriptions will appear in the API documentation in a different format as shown below.
+
 ```php
 /**
- * This is the short description
+ * @resource Example
  *
- * This can be an optional longer description of your API call, used within the documentation.
- *
+ * Longer description
  */
- public function foo()
+class ExampleController extends Controller {
+
+	/**
+	 * This is the short description [and should be unique as anchor tags link to this in navigation menu]
+	 *
+	 * This can be an optional longer description of your API call, used within the documentation.
+	 *
+	 */
+	 public function foo(){
+
+	 }
 ```
 
-**Result:** ![Doc block result](http://marcelpociot.com/documentarian/doc_block.png)
+**Result:** 
+
+![Doc block result](http://headsquaredsoftware.co.uk/images/api_generator_docblock.png)
 
 #### Form request validation rules
 
@@ -116,7 +144,7 @@ public function rules()
 }
 ```
 
-**Result:** ![Form Request](http://marcelpociot.com/documentarian/form_request.png)
+**Result:** ![Form Request](http://marcelpociot.de/documentarian/form_request.png)
 
 As well as the standard rules above, descriptions can be extended in the Description column by adding a description rule, like below:
 
@@ -152,13 +180,13 @@ If your API route accepts a `GET` method, this package tries to call the API rou
 If your API needs an authenticated user, you can use the `actAsUserId` option to specify a user ID that will be used for making these API calls:
 
 ```sh
-$ php artisan api:generate --routePrefix=api/* --actAsUserId=1
+$ php artisan api:generate --routePrefix="api/*" --actAsUserId=1
 ```
 
 If you don't want to automatically perform API response calls, use the `noResponseCalls` option.
 
 ```sh
-$ php artisan api:generate --routePrefix=api/* --noResponseCalls
+$ php artisan api:generate --routePrefix="api/*" --noResponseCalls
 ```
 
 > Note: The example API responses work best with seeded data.
@@ -168,6 +196,18 @@ $ php artisan api:generate --routePrefix=api/* --noResponseCalls
 The generator automatically creates a Postman collection file, which you can import to use within your [Postman App](https://www.getpostman.com/apps) for even simpler API testing and usage.
 
 If you don't want to create a Postman collection, use the `--noPostmanCollection` option, when generating the API documentation.
+
+As of as of Laravel 5.3, the default base URL added to the Postman collection will be that found in your Laravel `config/app.php` file. This will likely be `http://localhost`. If you wish to change this setting you can directly update the url or link this config value to your environment file to make it more flexible (as shown below):
+
+```php
+'url' => env('APP_URL', 'http://yourappdefault.app'),
+```
+
+If you are referring to the environment setting as shown above, then you should ensure that you have updated your `.env` file to set the APP_URL value as appropriate. Otherwise the default value (`http://yourappdefault.app`) will be used in your Postman collection. Example environment value:
+
+```
+APP_URL=http://yourapp.app
+```
 
 ## Modify the generated documentation
 
@@ -188,7 +228,7 @@ If you want to skip a single route from a list of routes that match a given pref
 
 ## Further modification
 
-This package uses [Documentarian](https://github.com/mpociot/documentarian) to generate the API documentation. If you want to modify the CSS files of your documentation, or simply want to learn more about what is possible, take a look at the [Documentarian guide](http://marcelpociot.com/documentarian/installation).
+This package uses [Documentarian](https://github.com/mpociot/documentarian) to generate the API documentation. If you want to modify the CSS files of your documentation, or simply want to learn more about what is possible, take a look at the [Documentarian guide](http://marcelpociot.de/documentarian/installation).
 
 ### License
 

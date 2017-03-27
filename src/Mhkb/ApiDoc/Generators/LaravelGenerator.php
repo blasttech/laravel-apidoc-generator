@@ -2,9 +2,11 @@
 
 namespace Mhkb\ApiDoc\Generators;
 
+use ReflectionClass;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Foundation\Http\FormRequest;
 
 class LaravelGenerator extends AbstractGenerator
 {
@@ -13,9 +15,27 @@ class LaravelGenerator extends AbstractGenerator
      *
      * @return mixed
      */
-    protected function getUri($route)
+    public function getUri($route)
     {
-        return $route->getUri();
+        if (version_compare(app()->version(), '5.4', '<')) {
+            return $route->getUri();
+        }
+
+        return $route->uri();
+    }
+
+    /**
+     * @param Route $route
+     *
+     * @return mixed
+     */
+    public function getMethods($route)
+    {
+        if (version_compare(app()->version(), '5.4', '<')) {
+            return $route->getMethods();
+        }
+
+        return $route->methods();
     }
 
     /**
@@ -37,7 +57,6 @@ class LaravelGenerator extends AbstractGenerator
         $routeGroup = $this->getRouteGroup($routeAction['uses']);
         $routeDescription = $this->getRouteDescription($routeAction['uses']);
 
-
         if ($withResponse) {
             $response = $this->getRouteResponse($route, $bindings, $headers, $methods);
             if ($response->headers->get('Content-Type') === 'application/json') {
@@ -54,16 +73,28 @@ class LaravelGenerator extends AbstractGenerator
         }
 
         return $this->getParameters([
-            'id' => md5($route->getUri().':'.implode($methods)),
+            'id' => md5($this->getUri($route).':'.implode($methods)),
             'resource' => $routeGroup,
             'title' => $routeDescription['short'],
             'description' => $routeDescription['long'],
             'tags' => $tags,
             'methods' => $methods,
-            'uri' => $route->getUri(),
+            'uri' => $this->getUri($route),
             'parameters' => [],
             'response' => $content,
         ], $routeAction, $bindings, $locale);
+    }
+
+    /**
+     * Prepares / Disables route middlewares.
+     *
+     * @param  bool $disable
+     *
+     * @return  void
+     */
+    public function prepareMiddleware($disable = true)
+    {
+        App::instance('middleware.disable', true);
     }
 
     /**
@@ -81,9 +112,6 @@ class LaravelGenerator extends AbstractGenerator
      */
     public function callRoute($method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null)
     {
-        $kernel = App::make('Illuminate\Contracts\Http\Kernel');
-        App::instance('middleware.disable', true);
-
         $server = collect([
             'CONTENT_TYPE' => 'application/json',
             'Accept' => 'application/json',
@@ -94,10 +122,53 @@ class LaravelGenerator extends AbstractGenerator
             $cookies, $files, $this->transformHeadersToServerVars($server), $content
         );
 
+        $kernel = App::make('Illuminate\Contracts\Http\Kernel');
         $response = $kernel->handle($request);
 
         $kernel->terminate($request, $response);
 
+        if (file_exists($file = App::bootstrapPath().'/app.php')) {
+            $app = require $file;
+            $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
+        }
+
         return $response;
+    }
+
+    /**
+     * @param  string $route
+     * @param  array $bindings
+     *
+     * @return array
+     */
+    protected function getRouteRules($route, $bindings)
+    {
+        list($class, $method) = explode('@', $route);
+        $reflection = new ReflectionClass($class);
+        $reflectionMethod = $reflection->getMethod($method);
+
+        foreach ($reflectionMethod->getParameters() as $parameter) {
+            $parameterType = $parameter->getClass();
+            if (! is_null($parameterType) && class_exists($parameterType->name)) {
+                $className = $parameterType->name;
+
+                if (is_subclass_of($className, FormRequest::class)) {
+                    $parameterReflection = new $className;
+                    $parameterReflection->setContainer(app());
+                    // Add route parameter bindings
+                    $parameterReflection->query->add($bindings);
+                    $parameterReflection->request->add($bindings);
+
+                    if (method_exists($parameterReflection, 'validator')) {
+                        return app()->call([$parameterReflection, 'validator'])
+                            ->getRules();
+                    } else {
+                        return app()->call([$parameterReflection, 'rules']);
+                    }
+                }
+            }
+        }
+
+        return [];
     }
 }

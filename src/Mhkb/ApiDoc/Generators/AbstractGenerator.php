@@ -3,13 +3,13 @@
 namespace Mhkb\ApiDoc\Generators;
 
 use Faker\Factory;
-use Illuminate\Foundation\Http\FormRequest;
+use ReflectionClass;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Mhkb\ApiDoc\Parsers\RuleDescriptionParser as Description;
-use ReflectionClass;
 use Mpociot\Reflection\DocBlock;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 
 abstract class AbstractGenerator
 {
@@ -18,7 +18,14 @@ abstract class AbstractGenerator
      *
      * @return mixed
      */
-    abstract protected function getUri($route);
+    abstract public function getUri($route);
+
+    /**
+     * @param $route
+     *
+     * @return mixed
+     */
+    abstract public function getMethods($route);
 
     /**
      * @param  \Illuminate\Routing\Route $route
@@ -31,6 +38,15 @@ abstract class AbstractGenerator
      * @return array
      */
     abstract public function processRoute($route, $bindings = [], $withResponse = true, $methods = [], $locale = null, $includeTags = null);
+
+    /**
+     * Prepares / Disables route middlewares.
+     *
+     * @param  bool $disable
+     *
+     * @return  void
+     */
+    abstract public function prepareMiddleware($disable = false);
 
     /**
      * @param array $routeData
@@ -78,6 +94,9 @@ abstract class AbstractGenerator
 
             return [trim($split[0]) => trim($split[1])];
         })->collapse()->toArray();
+
+        //Changes url with parameters like /users/{user} to /users/1
+        $uri = preg_replace('/{(.*)}/', 1, $uri);
 
         return $this->callRoute(array_shift($methods), $uri, [], [], [], $headers);
     }
@@ -334,7 +353,7 @@ abstract class AbstractGenerator
             case 'digits':
                 $attributeData['type'] = 'numeric';
                 $attributeData['description'][] = Description::parse($rule)->with($parameters)->getDescription();
-                $attributeData['value'] = $faker->randomNumber($parameters[0], true);
+                $attributeData['value'] = ($parameters[0] < 9) ? $faker->randomNumber($parameters[0], true) : substr(mt_rand(100000000, mt_getrandmax()), 0, $parameters[0]);
                 break;
             case 'digits_between':
                 $attributeData['type'] = 'numeric';

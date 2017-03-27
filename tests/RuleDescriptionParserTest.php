@@ -2,12 +2,12 @@
 
 namespace Mhkb\ApiDoc\Tests;
 
-use Illuminate\Translation\LoaderInterface;
-use Illuminate\Translation\Translator;
-use Mhkb\ApiDoc\ApiDocGeneratorServiceProvider;
-use Mhkb\ApiDoc\Parsers\RuleDescriptionParser;
-use Orchestra\Testbench\TestCase;
 use Mockery as m;
+use Orchestra\Testbench\TestCase;
+use Illuminate\Translation\Translator;
+use Illuminate\Translation\LoaderInterface;
+use Mhkb\ApiDoc\Parsers\RuleDescriptionParser;
+use Mhkb\ApiDoc\ApiDocGeneratorServiceProvider;
 
 class RuleDescriptionParserTest extends TestCase
 {
