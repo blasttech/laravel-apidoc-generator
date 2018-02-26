@@ -258,7 +258,7 @@ class GenerateDocumentation extends Command
      */
     public function getMethods($route, $allowedMethods = [])
     {
-        $methods = $route->getMethods();
+        $methods = $route->methods();
 
         foreach ($methods as $key => $method) {
             if (!in_array($method, $allowedMethods)) {
