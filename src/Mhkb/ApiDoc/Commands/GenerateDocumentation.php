@@ -284,12 +284,32 @@ class GenerateDocumentation extends Command
         $withResponse = $this->option('noResponseCalls') === false;
         $routes = $this->getRoutes();
         $bindings = $this->getBindings();
+        //Per route binding
+        $route_bindings = config('api.bindings');
+        $route_responses = [];
+
         $parsedRoutes = [];
         foreach ($routes as $route) {
-            if (in_array($route->getName(), $allowedRoutes) || str_is($routePrefix, $generator->getUri($route)) || in_array($middleware, $route->middleware())) {
+            $route_name = $route->getName();
+
+            if (in_array($route_name, $allowedRoutes) || str_is($routePrefix, $generator->getUri($route)) || in_array($middleware, $route->middleware())) {
                 $methods = $this->getMethods($route, $allowedMethods);
                 if ($this->isValidRoute($route) && $this->isRouteVisibleForDocumentation($route->getAction()['uses'])) {
-                    $parsedRoutes[] = $generator->processRoute($route, $bindings, $this->option('header'), $withResponse, $methods, $this->option('locale'), $includeTags);
+                    if ($route_bindings && !empty($route_bindings[$route_name])) {
+                        $current_bindings = $route_bindings[$route_name];
+                        foreach ($current_bindings as $key => $current_binding) {//Search for values like: RouteName@data.somevalue and replace for values of previous responses
+                            $current_bindings[$key] = preg_replace_callback("/{(\w+)@(.+)}/", function($m) use ($route_responses) {
+                                return $route_responses[$m[1]][$m[2]] ?? '';
+                            }, $current_binding);
+                        }
+                    } else {
+                        $current_bindings = $bindings;
+                    }
+                    $current_header = $current_bindings['@header'] ?? $this->option('header');
+                    $parsed_route = $generator->processRoute($route, $current_bindings, $current_header, $withResponse, $methods, $this->option('locale'), $includeTags);
+                    //Store the responses, might be used later
+                    $route_responses[$route_name] = array_dot(@json_decode($parsed_route['response'], true) ?: []);
+                    $parsedRoutes[] = $parsed_route;
                     $this->info('Processed route: ['.implode(',', $methods) .'] '.$generator->getUri($route));
                 } else {
                     $this->warn('Skipping route: ['.implode(',', $methods).'] '.$generator->getUri($route));
