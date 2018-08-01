@@ -1,5 +1,5 @@
 {
-    "name": "mhkb/laravel-apidoc-generator",
+    "name": "blasttech/laravel-apidoc-generator",
     "license": "MIT",
     "description": "Generate beautiful API documentation from your Laravel application",
     "keywords": [
@@ -7,7 +7,7 @@
         "Documentation",
         "Laravel"
     ],
-    "homepage": "http://github.com/mhkb/laravel-apidoc-generator",
+    "homepage": "http://github.com/blasttech/laravel-apidoc-generator",
     "authors": [
         {
             "name": "Michael Blair",
@@ -34,12 +34,12 @@
     },
     "autoload": {
         "psr-0": {
-            "Mhkb\\ApiDoc": "src/"
+            "Blasttech\\ApiDoc": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Mhkb\\ApiDoc\\Tests\\": "tests/"
+            "Blasttech\\ApiDoc\\Tests\\": "tests/"
         }
     }
 }
