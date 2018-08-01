@@ -1,6 +1,6 @@
 <?php
 
-namespace Mhkb\ApiDoc\Tests\Fixtures;
+namespace Blasttech\ApiDoc\Tests\Fixtures;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
 

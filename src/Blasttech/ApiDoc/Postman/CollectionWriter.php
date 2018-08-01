@@ -1,6 +1,6 @@
 <?php
 
-namespace Mhkb\ApiDoc\Postman;
+namespace Blasttech\ApiDoc\Postman;
 
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Collection;

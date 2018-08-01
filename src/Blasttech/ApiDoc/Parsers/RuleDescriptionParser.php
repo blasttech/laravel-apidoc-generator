@@ -1,6 +1,6 @@
 <?php
 
-namespace Mhkb\ApiDoc\Parsers;
+namespace Blasttech\ApiDoc\Parsers;
 
 class RuleDescriptionParser
 {

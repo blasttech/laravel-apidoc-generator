@@ -1,6 +1,6 @@
 <?php
 
-namespace Mhkb\ApiDoc\Generators;
+namespace Blasttech\ApiDoc\Generators;
 
 use ReflectionClass;
 use Illuminate\Routing\Route;
@@ -65,7 +65,7 @@ class LaravelGenerator extends AbstractGenerator
                 $content = $response->getContent();
             }
         }
-        
+
         if ($includeTags) {
             $tags = $routeDescription['tags'];
         } else {

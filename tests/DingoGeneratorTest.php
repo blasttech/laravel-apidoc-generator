@@ -1,19 +1,19 @@
 <?php
 
-namespace Mhkb\ApiDoc\Tests;
+namespace Blasttech\ApiDoc\Tests;
 
 use Orchestra\Testbench\TestCase;
-use Mhkb\ApiDoc\Generators\DingoGenerator;
+use Blasttech\ApiDoc\Generators\DingoGenerator;
 use Dingo\Api\Provider\LaravelServiceProvider;
-use Mhkb\ApiDoc\Tests\Fixtures\TestRequest;
-use Mhkb\ApiDoc\Tests\Fixtures\TestController;
-use Mhkb\ApiDoc\ApiDocGeneratorServiceProvider;
-use Mhkb\ApiDoc\Tests\Fixtures\DingoTestController;
+use Blasttech\ApiDoc\Tests\Fixtures\TestRequest;
+use Blasttech\ApiDoc\Tests\Fixtures\TestController;
+use Blasttech\ApiDoc\ApiDocGeneratorServiceProvider;
+use Blasttech\ApiDoc\Tests\Fixtures\DingoTestController;
 
 class DingoGeneratorTest extends TestCase
 {
     /**
-     * @var \Mhkb\ApiDoc\Generators\DingoGenerator
+     * @var \Blasttech\ApiDoc\Generators\DingoGenerator
      */
     protected $generator;
 

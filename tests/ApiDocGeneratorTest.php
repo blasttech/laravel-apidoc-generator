@@ -1,19 +1,19 @@
 <?php
 
-namespace Mhkb\ApiDoc\Tests;
+namespace Blasttech\ApiDoc\Tests;
 
 use Illuminate\Routing\Route;
 use Orchestra\Testbench\TestCase;
-use Mhkb\ApiDoc\Tests\Fixtures\TestRequest;
-use Mhkb\ApiDoc\Generators\LaravelGenerator;
-use Mhkb\ApiDoc\Tests\Fixtures\TestController;
-use Mhkb\ApiDoc\ApiDocGeneratorServiceProvider;
+use Blasttech\ApiDoc\Tests\Fixtures\TestRequest;
+use Blasttech\ApiDoc\Generators\LaravelGenerator;
+use Blasttech\ApiDoc\Tests\Fixtures\TestController;
+use Blasttech\ApiDoc\ApiDocGeneratorServiceProvider;
 use Illuminate\Support\Facades\Route as RouteFacade;
 
 class ApiDocGeneratorTest extends TestCase
 {
     /**
-     * @var \Mhkb\ApiDoc\AbstractGenerator
+     * @var \Blasttech\ApiDoc\AbstractGenerator
      */
     protected $generator;
 

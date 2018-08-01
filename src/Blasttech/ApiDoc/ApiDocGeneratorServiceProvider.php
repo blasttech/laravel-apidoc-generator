@@ -1,10 +1,10 @@
 <?php
 
-namespace Mhkb\ApiDoc;
+namespace Blasttech\ApiDoc;
 
 use Illuminate\Support\ServiceProvider;
-use Mhkb\ApiDoc\Commands\UpdateDocumentation;
-use Mhkb\ApiDoc\Commands\GenerateDocumentation;
+use Blasttech\ApiDoc\Commands\UpdateDocumentation;
+use Blasttech\ApiDoc\Commands\GenerateDocumentation;
 
 class ApiDocGeneratorServiceProvider extends ServiceProvider
 {

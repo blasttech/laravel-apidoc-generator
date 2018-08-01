@@ -1,6 +1,6 @@
 <?php
 
-namespace Mhkb\ApiDoc\Generators;
+namespace Blasttech\ApiDoc\Generators;
 
 use Exception;
 
@@ -14,7 +14,7 @@ class DingoGenerator extends AbstractGenerator
      * @param array $methods
      * @param string $locale
      * @param boolean $includeTags
-     * 
+     *
      * @return array
      */
     public function processRoute($route, $bindings = [], $headers = [], $withResponse = true, $methods = [], $locale = null, $includeTags = null)

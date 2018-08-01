@@ -16,9 +16,9 @@
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">src/Mhkb/</directory>
+            <directory suffix=".php">src/Blasttech/</directory>
             <exclude>
-                <file>src/Mhkb/ApiDoc/ApiDocGeneratorServiceProvider.php</file>
+                <file>src/Blasttech/ApiDoc/ApiDocGeneratorServiceProvider.php</file>
                 <file>src/resources/views/documentarian.blade.php</file>
             </exclude>
         </whitelist>

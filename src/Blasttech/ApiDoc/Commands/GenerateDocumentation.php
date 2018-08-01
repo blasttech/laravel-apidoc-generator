@@ -1,6 +1,6 @@
 <?php
 
-namespace Mhkb\ApiDoc\Commands;
+namespace Blasttech\ApiDoc\Commands;
 
 use ReflectionClass;
 use Illuminate\Console\Command;
@@ -8,10 +8,10 @@ use Mpociot\Reflection\DocBlock;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Mpociot\Documentarian\Documentarian;
-use Mhkb\ApiDoc\Postman\CollectionWriter;
-use Mhkb\ApiDoc\Generators\DingoGenerator;
-use Mhkb\ApiDoc\Generators\LaravelGenerator;
-use Mhkb\ApiDoc\Generators\AbstractGenerator;
+use Blasttech\ApiDoc\Postman\CollectionWriter;
+use Blasttech\ApiDoc\Generators\DingoGenerator;
+use Blasttech\ApiDoc\Generators\LaravelGenerator;
+use Blasttech\ApiDoc\Generators\AbstractGenerator;
 
 class GenerateDocumentation extends Command
 {
@@ -75,7 +75,7 @@ class GenerateDocumentation extends Command
         if ($this->option('methods') === null) {
             $allowedMethods = ['GET', 'POST', 'PUT', 'PATCH', 'HEAD'];
         } else {
-            $allowedMethods = explode(',', $this->option('methods'));             
+            $allowedMethods = explode(',', $this->option('methods'));
         }
 
         $this->setUserToBeImpersonated($this->option('actAsUserId'));
@@ -276,7 +276,7 @@ class GenerateDocumentation extends Command
      * @param $middleware
      * @param $allowedMethods
      * @param $includeTags
-     * 
+     *
      * @return array
      */
     private function processLaravelRoutes(AbstractGenerator $generator, $allowedRoutes, $routePrefix, $middleware, $allowedMethods, $includeTags)
@@ -327,7 +327,7 @@ class GenerateDocumentation extends Command
      * @param $middleware
      * @param $allowedMethods
      * @param $includeTags
-     * 
+     *
      * @return array
      */
     private function processDingoRoutes(AbstractGenerator $generator, $allowedRoutes, $routePrefix, $middleware, $allowedMethods, $includeTags)

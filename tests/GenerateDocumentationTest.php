@@ -1,22 +1,22 @@
 <?php
 
-namespace Mhkb\ApiDoc\Tests;
+namespace Blasttech\ApiDoc\Tests;
 
 use Illuminate\Routing\Route;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Contracts\Console\Kernel;
 use Dingo\Api\Provider\LaravelServiceProvider;
-use Mhkb\ApiDoc\Generators\LaravelGenerator;
-use Mhkb\ApiDoc\Tests\Fixtures\TestController;
-use Mhkb\ApiDoc\ApiDocGeneratorServiceProvider;
+use Blasttech\ApiDoc\Generators\LaravelGenerator;
+use Blasttech\ApiDoc\Tests\Fixtures\TestController;
+use Blasttech\ApiDoc\ApiDocGeneratorServiceProvider;
 use Illuminate\Support\Facades\Route as RouteFacade;
-use Mhkb\ApiDoc\Tests\Fixtures\DingoTestController;
+use Blasttech\ApiDoc\Tests\Fixtures\DingoTestController;
 use Mpociot\ApiDoc\Tests\Fixtures\TestResourceController;
 
 class GenerateDocumentationTest extends TestCase
 {
     /**
-     * @var \Mhkb\ApiDoc\AbstractGenerator
+     * @var \Blasttech\ApiDoc\AbstractGenerator
      */
     protected $generator;
 

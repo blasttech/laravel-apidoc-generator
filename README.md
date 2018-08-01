@@ -23,7 +23,7 @@ $ composer require mpociot/laravel-apidoc-generator
 Go to your `config/app.php` and add the service provider:
 
 ```php
-Mhkb\ApiDoc\ApiDocGeneratorServiceProvider::class,
+Blasttech\ApiDoc\ApiDocGeneratorServiceProvider::class,
 ```
 This package uses two extra validation rules in Laravel. If you wish to use these, you need to add the following to your AppServiceProvider.php
 

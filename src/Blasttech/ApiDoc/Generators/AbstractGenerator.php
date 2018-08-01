@@ -1,12 +1,12 @@
 <?php
 
-namespace Mhkb\ApiDoc\Generators;
+namespace Blasttech\ApiDoc\Generators;
 
 use Faker\Factory;
 use ReflectionClass;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Mhkb\ApiDoc\Parsers\RuleDescriptionParser as Description;
+use Blasttech\ApiDoc\Parsers\RuleDescriptionParser as Description;
 use Mpociot\Reflection\DocBlock;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -34,7 +34,7 @@ abstract class AbstractGenerator
      * @param array $methods
      * @param string $locale
      * @param boolean $includeTags
-     * 
+     *
      * @return array
      */
     abstract public function processRoute($route, $bindings = [], $withResponse = true, $methods = [], $locale = null, $includeTags = null);
@@ -462,7 +462,7 @@ abstract class AbstractGenerator
                 } else {
                     $attributeData['value'] = $faker->{$parameters[0]};
                 }
-                break;        
+                break;
         }
 
         if ($attributeData['value'] === '') {

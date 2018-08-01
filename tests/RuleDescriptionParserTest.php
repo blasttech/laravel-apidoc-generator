@@ -1,13 +1,13 @@
 <?php
 
-namespace Mhkb\ApiDoc\Tests;
+namespace Blasttech\ApiDoc\Tests;
 
 use Mockery as m;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Translation\Translator;
 use Illuminate\Translation\LoaderInterface;
-use Mhkb\ApiDoc\Parsers\RuleDescriptionParser;
-use Mhkb\ApiDoc\ApiDocGeneratorServiceProvider;
+use Blasttech\ApiDoc\Parsers\RuleDescriptionParser;
+use Blasttech\ApiDoc\ApiDocGeneratorServiceProvider;
 
 class RuleDescriptionParserTest extends TestCase
 {
